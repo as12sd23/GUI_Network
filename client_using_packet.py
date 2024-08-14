@@ -15,9 +15,12 @@ HEADER_SIZE = 8
 
 form_class = uic.loadUiType("Chat.ui")[0]
 
+class LoginWindow(QWidget, form_class):
+    def __init__(self, sock):
+        super().__init__()
+        
 class WindowClass(QMainWindow, form_class):
     def __init__(self, sock) :
-        global SEND_FILE_PATH
         super().__init__()
         self.setupUi(self)
         self.sock = sock
@@ -77,8 +80,8 @@ class WindowClass(QMainWindow, form_class):
                     self.ChattingList.addItem("파일 업로드 완료")
         except Exception as e:
             print(e)
-            self.QMessageBox.critical(self, 'Error', e)
-            
+            self.QMessageBox.critical(self, 'Error', e)        
+    
     @pyqtSlot(str)
     def MessageSignal(self, Message):
         #리스트 뷰에 메세지 올리기
@@ -134,7 +137,7 @@ class Receive(QThread):
             except Exception as e:
                 print(e)
                 self.ErrorSignal.emit(str(e))
-        
+
 port = 8888
 if __name__ == "__main__":  
     clientSock = socket(AF_INET, SOCK_STREAM)
